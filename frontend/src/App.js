@@ -5,8 +5,8 @@ import Home from "./Home";
 import NavBar from "./NavBar";
 import NotFound from "./NotFound";
 import JoblyApi from "./Api";
-import Companies from "./Companies";
-import Company from "./Company";
+import CompanyList from "./CompanyList";
+import CompanyDetail from "./CompanyDetail";
 import Jobs from "./Jobs";
 import Login from "./Login";
 import SignUp from "./SignUp";
@@ -23,27 +23,33 @@ const user = {
 // const user = false;
 
 function App() {
+
+  const nameC = "";
+
   const [isLoading, setIsLoading] = useState(true);
 
   // const [user, setUser] = useState({user: false});
   const [companies, setCompanies] = useState({});
   const [jobs, setJobs] = useState({});
+  const [companyName, setCompanyName] = useState(nameC);
 
+  const filterCompany = (c) => {
+    setCompanyName(c);
+  }
 
   useEffect(() => {
     async function getItems() {
 
-      let companies = await JoblyApi.getAllCompanies();
+      let companies = await JoblyApi.getAllCompanies(companyName);
       let jobs = await JoblyApi.getAllJobs();
 
       setCompanies(companies);
       setJobs(jobs);
-
       setIsLoading(false);
     }
     getItems();
 
-  }, []);
+  }, [companyName]);
 
   if (isLoading) {
     return <p>Loading &hellip;</p>;
@@ -56,13 +62,13 @@ function App() {
         <main>
           <Switch>
             <Route exact path="/">
-              <Home user={user}/>
+              <Home user={user} />
             </Route>
             <Route exact path="/companies">
-              <Companies companies={companies} />
+              <CompanyList companies={companies} filterCompany={filterCompany} />
             </Route>
             <Route path="/companies/:handle">
-              <Company />
+              <CompanyDetail />
             </Route>
             <Route path="/jobs">
               <Jobs jobs={jobs} />

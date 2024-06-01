@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import "./Home.css";
 
 
-function Home({user}) {
-
+function Home({ user }) {
   return (
     <div className="Home">
       <h1>Jobly</h1>

@@ -4,7 +4,7 @@ import JoblyApi from "./Api";
 import Job from "./Job";
 
 
-const Company = ({companies, cantFind}) => {
+const CompanyDetail = () => {
     const { handle } = useParams();
 
     const [company, setCompany] = useState(null);
@@ -38,4 +38,4 @@ const Company = ({companies, cantFind}) => {
 }
 
 
-export default Company;
+export default CompanyDetail;

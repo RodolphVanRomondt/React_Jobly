@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-// import "./AddItem.css";
-// import SnackOrBoozeApi from "./Api";
 import { useHistory } from "react-router-dom";
 
 import JoblyApi from "./Api";
