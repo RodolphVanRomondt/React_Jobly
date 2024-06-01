@@ -7,7 +7,7 @@ import NotFound from "./NotFound";
 import JoblyApi from "./Api";
 import CompanyList from "./CompanyList";
 import CompanyDetail from "./CompanyDetail";
-import Jobs from "./Jobs";
+import JobList from "./JobList";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import Profile from "./Profile";
@@ -24,24 +24,27 @@ const user = {
 
 function App() {
 
-  const nameC = "";
-
   const [isLoading, setIsLoading] = useState(true);
 
   // const [user, setUser] = useState({user: false});
   const [companies, setCompanies] = useState({});
   const [jobs, setJobs] = useState({});
-  const [companyName, setCompanyName] = useState(nameC);
+
+  const [companyName, setCompanyName] = useState("");
+  const [jobName, setJobName] = useState("");
 
   const filterCompany = (c) => {
     setCompanyName(c);
+  }
+  const filterJob = (j) => {
+    setJobName(j);
   }
 
   useEffect(() => {
     async function getItems() {
 
       let companies = await JoblyApi.getAllCompanies(companyName);
-      let jobs = await JoblyApi.getAllJobs();
+      let jobs = await JoblyApi.getAllJobs(jobName);
 
       setCompanies(companies);
       setJobs(jobs);
@@ -49,7 +52,7 @@ function App() {
     }
     getItems();
 
-  }, [companyName]);
+  }, [companyName, jobName]);
 
   if (isLoading) {
     return <p>Loading &hellip;</p>;
@@ -71,7 +74,7 @@ function App() {
               <CompanyDetail />
             </Route>
             <Route path="/jobs">
-              <Jobs jobs={jobs} />
+              <JobList jobs={jobs} filterJob={filterJob} />
             </Route>
             <Route path="/login">
               <Login />

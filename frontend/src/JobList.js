@@ -1,12 +1,9 @@
-import React, { useState} from "react";
-import "./Companies.css";
-import { Link } from "react-router-dom";
+import React, {useState} from "react";
 import { Form, FormGroup, Input, Button } from "reactstrap";
-import CompanyCard from "./CompanyCard";
+import Job from "./Job";
 
+const JobList = ({ jobs, filterJob }) => {
 
-const CompanyList = ({ companies, filterCompany }) => {
-    
     const INITIAL_STATE = {
         searchBar: ""
     };
@@ -24,12 +21,11 @@ const CompanyList = ({ companies, filterCompany }) => {
     const handleSubmit = e => {
         e.preventDefault();
         // setFormData(INITIAL_STATE);
-
-        filterCompany(formData.searchBar);
+        filterJob(formData.searchBar);
     }
 
     return (
-        <div className="Companies">
+        <div className="Jobs">
             <Form onSubmit={handleSubmit}>
                 <FormGroup>
                     <Input
@@ -43,15 +39,11 @@ const CompanyList = ({ companies, filterCompany }) => {
                     <Button>Submit</Button>
                 </FormGroup>
             </Form>
-            {companies.map(
-                company =>
-                    <Link to={`/companies/${company.handle}`} key={company.handle}>
-                        <CompanyCard company={company} />
-                    </Link>
+            {jobs.map(
+                job => <Job job={job} key={job.id} />
             )}
         </div>
     )
 }
 
-
-export default CompanyList;
+export default JobList;
