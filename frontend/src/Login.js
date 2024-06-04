@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-// import "./AddItem.css";
-// import SnackOrBoozeApi from "./Api";
 import { useHistory } from "react-router-dom";
 
-import JoblyApi from "./Api";
 
-
-const Login = ({ add, addFunc }) => {
+const Login = ({ login }) => {
 
     const INITIAL_STATE = {
         username: "",
@@ -25,17 +21,12 @@ const Login = ({ add, addFunc }) => {
         }));
     };
 
-    const handleSubmit = e => {
+    async function handleSubmit (e) {
         e.preventDefault();
-        setFormData(INITIAL_STATE);
-
-        async function addItem() {
-            const data = { ...formData, id: formData.name.trim().replace(" ", "-").toLocaleLowerCase() };
-            addFunc(formData);
-            add();
+        const res = await login(formData);
+        if (res.success) {
+            history.push("/");
         }
-        addItem();
-        history.push(`/`);
     }
 
     return (

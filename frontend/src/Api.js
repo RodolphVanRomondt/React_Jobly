@@ -34,10 +34,16 @@ class JoblyApi {
     }
   }
 
-  /* Authenticate User. */
-  static async authenticateUser(data, method = "post") {
-    const res = await this.request("auth/token", data, method);
-    return res;
+  /* Login User. */
+  static async login(data) {
+    const res = await this.request("auth/token", data, "post");
+    return res.token;
+  }
+
+  /* Register User. */
+  static async signup(data) {
+    const res = await this.request("auth/register", data, "post");
+    return res.token;
   }
 
   // Individual API routes
@@ -66,7 +72,11 @@ class JoblyApi {
     return res.jobs;
   }
 
-  /*  */
+  /* Get Current User. */
+  static async getCurrentUser(username) {
+    const res = await this.request(`users/${username}`);
+    return res.user;
+  }
 }
 
 // for now, put token ("testuser" / "password" on class)

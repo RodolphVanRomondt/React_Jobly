@@ -1,17 +1,32 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import "./Companies.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Form, FormGroup, Input, Button } from "reactstrap";
 import CompanyCard from "./CompanyCard";
+import JoblyApi from "./Api";
 
 
-const CompanyList = ({ companies, filterCompany }) => {
+const CompanyList = ({user}) => {
     
     const INITIAL_STATE = {
         searchBar: ""
     };
 
     const [formData, setFormData] = useState(INITIAL_STATE);
+    const [companies, setCompanies] = useState([]);
+
+    const history = useHistory();
+
+    if (!user) history.push("/");
+
+    async function getCompanies(name) {
+        const companies = await JoblyApi.getAllCompanies(name);
+        setCompanies(companies);
+    }
+
+    useEffect(() => {
+        getCompanies();
+    }, []);
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -25,7 +40,11 @@ const CompanyList = ({ companies, filterCompany }) => {
         e.preventDefault();
         // setFormData(INITIAL_STATE);
 
-        filterCompany(formData.searchBar);
+        getCompanies(formData.searchBar);
+    }
+
+    if (!companies) {
+        return <p>Loading &hellip;</p>;
     }
 
     return (

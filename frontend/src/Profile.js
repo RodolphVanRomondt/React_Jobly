@@ -9,6 +9,8 @@ const Profile = ({ user, add, addFunc }) => {
     const [formData, setFormData] = useState(user);
     const history = useHistory();
 
+    if (!user) history.push("/");
+
     const handleChange = evt => {
         const { name, value } = evt.target;
         setFormData(fData => ({

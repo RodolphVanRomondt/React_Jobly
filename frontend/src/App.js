@@ -11,48 +11,59 @@ import JobList from "./JobList";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import Profile from "./Profile";
-
-const user = {
-  "username": "testadmin",
-  "firstName": "Test",
-  "lastName": "Admin!",
-  "email": "joel@joelburton.com",
-  "isAdmin": true
-};
-
-// const user = false;
+import {jwtDecode} from "jwt-decode";
 
 function App() {
 
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState(null);
+  const [currentUser, setCurrentUser] = useState(false);
 
-  // const [user, setUser] = useState({user: false});
-  const [companies, setCompanies] = useState({});
-  const [jobs, setJobs] = useState({});
-
-  const [companyName, setCompanyName] = useState("");
-  const [jobName, setJobName] = useState("");
-
-  const filterCompany = (c) => {
-    setCompanyName(c);
+  async function login(loginData) {
+    try {
+      let token = await JoblyApi.login(loginData);
+      setToken(token);
+      return { success: true };
+    } catch (errors) {
+      console.error("login failed", errors);
+      return { success: false, errors };
+    }
   }
-  const filterJob = (j) => {
-    setJobName(j);
+
+  function logout() {
+    setCurrentUser(null);
+    setToken(null);
+  }
+
+  async function signup(signupData) {
+    try {
+      let token = await JoblyApi.signup(signupData);
+      setToken(token);
+      return { success: true };
+    } catch (errors) {
+      return {success: false, errors}
+    }
   }
 
   useEffect(() => {
-    async function getItems() {
-
-      let companies = await JoblyApi.getAllCompanies(companyName);
-      let jobs = await JoblyApi.getAllJobs(jobName);
-
-      setCompanies(companies);
-      setJobs(jobs);
-      setIsLoading(false);
+    async function getCurrentUser() {
+      if (token) {
+        try {
+          let { username } = jwtDecode(token);
+          JoblyApi.token = token;
+          let currentUser = await JoblyApi.getCurrentUser(username);
+          setCurrentUser(currentUser);
+        } catch (err) {
+          setCurrentUser(null);
+        }
+      }
     }
-    getItems();
 
-  }, [companyName, jobName]);
+    console.log(currentUser);
+    setIsLoading(false);
+    getCurrentUser();
+
+  }, [token]);
 
   if (isLoading) {
     return <p>Loading &hellip;</p>;
@@ -61,29 +72,29 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <NavBar user={user} />
+        <NavBar user={currentUser} logout={logout} />
         <main>
           <Switch>
             <Route exact path="/">
-              <Home user={user} />
+              <Home user={currentUser} />
             </Route>
             <Route exact path="/companies">
-              <CompanyList companies={companies} filterCompany={filterCompany} />
+              <CompanyList user={currentUser} />
             </Route>
             <Route path="/companies/:handle">
-              <CompanyDetail />
+              <CompanyDetail user={currentUser} />
             </Route>
             <Route path="/jobs">
-              <JobList jobs={jobs} filterJob={filterJob} />
+              <JobList user={currentUser} />
             </Route>
             <Route path="/login">
-              <Login />
+              <Login login={login} />
             </Route>
             <Route path="/signup">
-              <SignUp />
+              <SignUp signup={signup} />
             </Route>
             <Route path="/profile">
-              <Profile user={user} />
+              <Profile user={currentUser} />
             </Route>
             <Route>
               <NotFound />

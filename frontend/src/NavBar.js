@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Navbar, Nav, NavItem } from "reactstrap";
 
 
-function NavBar({user}) {
+function NavBar({user, logout}) {
   return (
     <div>
       <Navbar expand="md">
@@ -22,7 +22,7 @@ function NavBar({user}) {
               <NavLink to="/companies">Companies</NavLink>
               <NavLink to="/jobs">Jobs</NavLink>
               <NavLink to="/profile">Profile</NavLink>
-              <NavLink to="/logout">Log Out {user.username}</NavLink>
+              <NavLink to="/" onClick={logout}>Log Out {user.username}</NavLink>
             </NavItem> 
           }
         </Nav>

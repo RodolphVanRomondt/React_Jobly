@@ -2,38 +2,35 @@ import React, { useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
-import JoblyApi from "./Api";
 
-
-const SignUp = ({ add, addFunc }) => {
-
+const SignUp = ({signup}) => {
     const INITIAL_STATE = {
         username: "",
-        password: ""
+        password: "",
+        firstName: "",
+        lastName: "",
+        email: ""
+
     };
 
     const [formData, setFormData] = useState(INITIAL_STATE);
     const history = useHistory();
 
-    const handleChange = evt => {
-        const { name, value } = evt.target;
+    const handleChange = e => {
+        const { name, value } = e.target;
         setFormData(fData => ({
             ...fData,
             [name]: value
         }));
     };
 
-    const handleSubmit = e => {
+    async function handleSubmit (e) {
         e.preventDefault();
-        setFormData(INITIAL_STATE);
-
-        async function addItem() {
-            const data = { ...formData, id: formData.name.trim().replace(" ", "-").toLocaleLowerCase() };
-            addFunc(formData);
-            add();
+        const res = await signup(formData);
+        console.log(res);
+        if (res.success) {
+            history.push("/");
         }
-        addItem();
-        history.push(`/`);
     }
 
     return (
@@ -96,7 +93,7 @@ const SignUp = ({ add, addFunc }) => {
                     >
                     </Input>
                 </FormGroup>
-                <Button>Submit</Button>
+                <Button onSubmit={handleSubmit}>Submit</Button>
             </Form>
         </div>
     )
