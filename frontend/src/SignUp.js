@@ -4,16 +4,15 @@ import { useHistory } from "react-router-dom";
 
 
 const SignUp = ({signup}) => {
-    const INITIAL_STATE = {
+
+    const [formData, setFormData] = useState({
         username: "",
         password: "",
         firstName: "",
         lastName: "",
         email: ""
 
-    };
-
-    const [formData, setFormData] = useState(INITIAL_STATE);
+    });
     const history = useHistory();
 
     const handleChange = e => {
@@ -27,7 +26,6 @@ const SignUp = ({signup}) => {
     async function handleSubmit (e) {
         e.preventDefault();
         const res = await signup(formData);
-        console.log(res);
         if (res.success) {
             history.push("/");
         }
@@ -93,7 +91,7 @@ const SignUp = ({signup}) => {
                     >
                     </Input>
                 </FormGroup>
-                <Button onSubmit={handleSubmit}>Submit</Button>
+                <Button>Submit</Button>
             </Form>
         </div>
     )

@@ -22,7 +22,7 @@ function NavBar({user, logout}) {
               <NavLink to="/companies">Companies</NavLink>
               <NavLink to="/jobs">Jobs</NavLink>
               <NavLink to="/profile">Profile</NavLink>
-              <NavLink to="/" onClick={logout}>Log Out {user.username}</NavLink>
+              <NavLink to onClick={logout}>Log Out {user.username}</NavLink>
             </NavItem> 
           }
         </Nav>

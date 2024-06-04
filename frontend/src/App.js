@@ -26,9 +26,8 @@ function App() {
       let token = await JoblyApi.login(loginData);
       setToken(token);
       return { success: true };
-    } catch (errors) {
-      console.error("login failed", errors);
-      return { success: false, errors };
+    } catch (e) {
+      return { success: false };
     }
   }
 
@@ -47,6 +46,16 @@ function App() {
     }
   }
 
+  async function pathUser(pathData) {
+    try {
+      const res = await JoblyApi.updateUser(currentUser.username, pathData);
+      setCurrentUser(res);
+      return {success: true}
+    } catch (e) {
+      return {success: false}
+    }
+  }
+
   useEffect(() => {
     async function getCurrentUser() {
       if (token) {
@@ -61,7 +70,6 @@ function App() {
       }
     }
 
-    console.log(currentUser);
     setIsLoading(false);
     getCurrentUser();
 
@@ -96,7 +104,7 @@ function App() {
               <SignUp signup={signup} />
             </Route>
             <Route path="/profile">
-              <Profile user={currentUser} />
+              <Profile user={currentUser} pathUser={pathUser} />
             </Route>
             <Route>
               <NotFound />

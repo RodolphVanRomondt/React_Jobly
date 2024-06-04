@@ -4,32 +4,33 @@ import "./Profile.css";
 import { useHistory } from "react-router-dom";
 
 
-const Profile = ({ user, add, addFunc }) => {
+const Profile = ({ user, pathUser }) => {
 
-    const [formData, setFormData] = useState(user);
     const history = useHistory();
-
     if (!user) history.push("/");
 
-    const handleChange = evt => {
-        const { name, value } = evt.target;
+    const [formData, setFormData] = useState(user);
+
+    const handleChange = e => {
+        const { name, value } = e.target;
         setFormData(fData => ({
             ...fData,
             [name]: value
         }));
     };
 
-    const handleSubmit = e => {
+    async function handleSubmit (e) {
         e.preventDefault();
-        setFormData(user);
 
-        async function addItem() {
-            const data = { ...formData, id: formData.name.trim().replace(" ", "-").toLocaleLowerCase() };
-            addFunc(formData);
-            add();
+        const res = await pathUser({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email
+        });
+
+        if (res.success) {
+            history.push("/");
         }
-        addItem();
-        history.push(`/`);
     }
 
     return (

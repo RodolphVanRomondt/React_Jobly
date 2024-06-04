@@ -7,16 +7,11 @@ import JoblyApi from "./Api";
 
 
 const CompanyList = ({user}) => {
-    
-    const INITIAL_STATE = {
-        searchBar: ""
-    };
 
-    const [formData, setFormData] = useState(INITIAL_STATE);
+    const [formData, setFormData] = useState({searchBar: ""});
     const [companies, setCompanies] = useState([]);
 
     const history = useHistory();
-
     if (!user) history.push("/");
 
     async function getCompanies(name) {
@@ -38,8 +33,6 @@ const CompanyList = ({user}) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        // setFormData(INITIAL_STATE);
-
         getCompanies(formData.searchBar);
     }
 
