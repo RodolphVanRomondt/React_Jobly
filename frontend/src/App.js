@@ -13,6 +13,7 @@ import SignUp from "./SignUp";
 import Profile from "./Profile";
 import { jwtDecode } from "jwt-decode";
 import useLocalStorage from "./useLocalStorage";
+import UserContext from "./UserContext";
 
 function App() {
 
@@ -46,7 +47,7 @@ function App() {
     }
   }
 
-  async function pathUser(pathData) {
+  async function patchUser(pathData) {
     try {
       const res = await JoblyApi.updateUser(currentUser.username, pathData);
       setCurrentUser(res);
@@ -82,35 +83,39 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <NavBar user={currentUser} logout={logout} />
-        <main>
-          <Switch>
-            <Route exact path="/">
-              <Home user={currentUser} />
-            </Route>
-            <Route exact path="/companies">
-              <CompanyList user={currentUser} />
-            </Route>
-            <Route path="/companies/:handle">
-              <CompanyDetail user={currentUser} />
-            </Route>
-            <Route path="/jobs">
-              <JobList user={currentUser} />
-            </Route>
-            <Route path="/login">
-              <Login login={login} />
-            </Route>
-            <Route path="/signup">
-              <SignUp signup={signup} />
-            </Route>
-            <Route path="/profile">
-              <Profile user={currentUser} pathUser={pathUser} />
-            </Route>
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
-        </main>
+        <UserContext.Provider
+          value={{currentUser, setCurrentUser, logout, login, signup}}
+        >
+          <NavBar user={currentUser} logout={logout} />
+          <main>
+            <Switch>
+              <Route exact path="/">
+                <Home user={currentUser} />
+              </Route>
+              <Route exact path="/companies">
+                <CompanyList user={currentUser} />
+              </Route>
+              <Route path="/companies/:handle">
+                <CompanyDetail />
+              </Route>
+              <Route path="/jobs">
+                <JobList user={currentUser} />
+              </Route>
+              <Route path="/login">
+                <Login login={login} />
+              </Route>
+              <Route path="/signup">
+                <SignUp signup={signup} />
+              </Route>
+              <Route path="/profile">
+                <Profile patchUser={patchUser} />
+              </Route>
+              <Route>
+                <NotFound />
+              </Route>
+            </Switch>
+          </main>
+        </UserContext.Provider>
       </BrowserRouter>
     </div>
   );

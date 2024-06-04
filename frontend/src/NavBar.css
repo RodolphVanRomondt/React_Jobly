@@ -45,3 +45,6 @@ nav a:not(.navbar-brand):hover {
   font-weight: bold;
 }
 
+.logout a {
+  text-decoration: none;
+}

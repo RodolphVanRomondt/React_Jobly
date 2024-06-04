@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { Redirect, useParams } from "react-router-dom";
 import JoblyApi from "./Api";
 import Job from "./Job";
+import UserContext from "./UserContext";
 
 
 const CompanyDetail = () => {
@@ -9,6 +10,7 @@ const CompanyDetail = () => {
 
     const [company, setCompany] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const { currentUser } = useContext(UserContext);
 
     useEffect(() => {
         async function getCompany() {
@@ -31,7 +33,7 @@ const CompanyDetail = () => {
                 <p>{company.description}</p>
             </div>
             {company.jobs.map(
-                job => <Job job={job} key={job.id}/>
+                job => <Job job={job} key={job.id} applyBool={currentUser.applications.includes(job.id)}/>
             )}
         </div>
     )

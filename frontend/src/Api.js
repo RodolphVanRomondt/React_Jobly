@@ -70,6 +70,12 @@ class JoblyApi {
     return res.jobs;
   }
 
+  /* Apply To Job. */
+  static async applyToJob(username, jobId) {
+    const res = await this.request(`users/${username}/jobs/${jobId}`, {}, "post");
+    return res;
+  }
+
   /* Get Current User. */
   static async getCurrentUser(username) {
     const res = await this.request(`users/${username}`);

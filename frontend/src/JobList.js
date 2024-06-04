@@ -1,21 +1,19 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { Form, FormGroup, Input, Button } from "reactstrap";
 import {useHistory} from "react-router-dom";
 import Job from "./Job";
 import JoblyApi from "./Api";
+import UserContext from "./UserContext";
 
-const JobList = ({user}) => {
 
-    const INITIAL_STATE = {
-        searchBar: ""
-    };
+const JobList = () => {
 
-    const [formData, setFormData] = useState(INITIAL_STATE);
+    const [formData, setFormData] = useState({searchBar: ""});
     const [jobs, setJobs] = useState([]);
+    const { currentUser } = useContext(UserContext);
 
     const history = useHistory();
-
-    if (!user) history.push("/");
+    if (!currentUser) history.push("/");
 
     async function getJobs(name) {
         const jobs = await JoblyApi.getAllJobs(name);
@@ -36,7 +34,6 @@ const JobList = ({user}) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        // setFormData(INITIAL_STATE);
         getJobs(formData.searchBar);
     }
 
@@ -56,7 +53,7 @@ const JobList = ({user}) => {
                 </FormGroup>
             </Form>
             {jobs.map(
-                job => <Job job={job} key={job.id} />
+                job => <Job job={job} key={job.id} applyBool={currentUser.applications.includes(job.id)} />
             )}
         </div>
     )

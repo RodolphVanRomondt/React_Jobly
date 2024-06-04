@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import "./Job.css";
+import JoblyApi from "./Api";
+import UserContext from "./UserContext";
 
-const Job = ({ job }) => {
+const Job = ({ job, applyBool }) => {
+
+    const { currentUser, setCurrentUser } = useContext(UserContext);
+    const [applied, setApplied] = useState(applyBool);
+
+    async function apply() {
+        await JoblyApi.applyToJob(currentUser.username, job.id);
+        currentUser.applications.push(job.id);
+        setApplied(true);
+    }
 
     return (
         <div className="Job">
@@ -11,7 +22,9 @@ const Job = ({ job }) => {
                 <p>Salary: {job.salary ? job.salary : "NULL" }</p>
                 <p>Equity: {job.equity ? job.equity : "NULL"}</p>
             </div>
-            <button>Apply</button>
+            <button onClick={apply} disabled={applied}>
+                {applied ? "Applied" : "Apply"}
+            </button>
         </div>
     )
 }
