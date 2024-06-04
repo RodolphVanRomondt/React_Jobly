@@ -11,13 +11,15 @@ import JobList from "./JobList";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import Profile from "./Profile";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import useLocalStorage from "./useLocalStorage";
 
 function App() {
 
   const [isLoading, setIsLoading] = useState(true);
-  const [token, setToken] = useState(null);
   const [currentUser, setCurrentUser] = useState(false);
+
+  const [token, setToken] = useLocalStorage("token", null);
 
   async function login(loginData) {
     try {
